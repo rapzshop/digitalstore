@@ -47,13 +47,19 @@ function generateID() {
   return 'ORDER-' + Math.random().toString(36).substr(2, 9).toUpperCase();
 }
 
+// ✅ Update: Fungsi validasi voucher untuk umum & khusus
 function validasiVoucher(kode, userId) {
   return db.ref("voucher/" + kode).once("value").then((snap) => {
     if (!snap.exists()) return { valid: false, pesan: "Kode tidak ditemukan." };
     const data = snap.val();
     if (!data.aktif) return { valid: false, pesan: "Kode tidak aktif." };
-    if (data.digunakan) return { valid: false, pesan: "Kode sudah digunakan." };
-    if (data.userId && data.userId !== userId) return { valid: false, pesan: "Kode ini bukan untuk perangkat Anda." };
+
+    // Cek jika voucher KHUSUS
+    if (data.userId || data.digunakan !== undefined) {
+      if (data.digunakan) return { valid: false, pesan: "Kode sudah digunakan." };
+      if (data.userId && data.userId !== userId) return { valid: false, pesan: "Kode ini bukan untuk perangkat Anda." };
+    }
+
     return { valid: true, potongan: data.potongan || 0 };
   });
 }
@@ -81,8 +87,14 @@ function kirimPesan() {
   const prosesSubmit = (hargaFinal, potonganInfo) => {
     const data = { id: idTransaksi, userId, nama, wa, produk, metode, kode, harga: hargaFinal, email, waktu, status: "menunggu" };
     db.ref("pesanan/" + idTransaksi).set(data).then(() => {
+      // Tandai digunakan hanya jika voucher khusus
       if (kode !== "" && kode !== "Tidak digunakan") {
-        db.ref("voucher/" + kode + "/digunakan").set(true);
+        db.ref("voucher/" + kode).once("value").then((snap) => {
+          const data = snap.val();
+          if (data.digunakan !== undefined) {
+            db.ref("voucher/" + kode + "/digunakan").set(true);
+          }
+        });
       }
 
       const msg = `🛒 Pesanan Masuk\nID Transaksi: ${idTransaksi}\n👤 ${nama}\n📱 ${wa}\n📦 ${produk === 'canva' ? 'Canva Pro' : 'Alight Motion'}\n💳 ${metode}\n💰 Rp ${hargaFinal}${potonganInfo}\n🎟 ${kode}\n📧 ${email || '-'}\n🕒 ${waktu}`;
@@ -121,24 +133,6 @@ function kirimPesan() {
     prosesSubmit(parseInt(hargaAwal), "");
   }
 }
-
-// Countdown promo 3 jam
-const countdown = document.getElementById("countdown");
-const now = new Date().getTime();
-const end = now + (3 * 60 * 60 * 1000);
-const x = setInterval(() => {
-  const now = new Date().getTime();
-  const distance = end - now;
-  if (distance < 0) {
-    clearInterval(x);
-    countdown.innerHTML = "❌ Promo berakhir";
-    return;
-  }
-  const h = Math.floor(distance / (1000 * 60 * 60));
-  const m = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-  const s = Math.floor((distance % (1000 * 60)) / 1000);
-  countdown.innerHTML = `${h.toString().padStart(2, "0")}:${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
-}, 1000);
 
 // Jalankan user ID saat halaman dibuka
 getUserID();

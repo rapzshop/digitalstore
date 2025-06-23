@@ -25,14 +25,22 @@ function pilihProduk() {
   const produk = document.getElementById("produk").value;
   const harga = document.getElementById("harga");
   const emailWrap = document.getElementById("email-wrap");
+  const warningEmail = document.querySelector(".warning-email");
+  const emailInput = document.getElementById("email");
+
   if (produk === "canva") {
     harga.value = "4000";
     emailWrap.style.display = "block";
-    document.querySelector(".warning-email").style.display = "block";
+    warningEmail.style.display = "block";
   } else {
-    harga.value = "5000";
+    if (produk === "am1thn") {
+      harga.value = "3000";
+    } else {
+      harga.value = "5000";
+    }
     emailWrap.style.display = "none";
-    document.querySelector(".warning-email").style.display = "none";
+    warningEmail.style.display = "none";
+    emailInput.value = "";
   }
 }
 

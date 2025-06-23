@@ -42,6 +42,8 @@ function pilihProduk() {
     warningEmail.style.display = "none";
     emailInput.value = "";
   }
+
+  cekStokAwal(); // refresh stok sesuai produk
 }
 
 function copyNomor() {
@@ -55,7 +57,6 @@ function generateID() {
   return 'ORDER-' + Math.random().toString(36).substr(2, 9).toUpperCase();
 }
 
-// Validasi kode voucher
 function validasiVoucher(kode, userId) {
   return db.ref("voucher/" + kode).once("value").then((snap) => {
     if (!snap.exists()) return { valid: false, pesan: "Kode tidak ditemukan." };
@@ -71,10 +72,31 @@ function validasiVoucher(kode, userId) {
   });
 }
 
-// Kurangi stok dan kirim notifikasi jika habis
+// Tambahan: Cek stok dan matikan tombol jika kosong
+function cekStokAwal() {
+  const produk = document.getElementById("produk").value;
+  const tombol = document.querySelector("button[onclick='kirimPesan()']");
+  const stokTeks = document.getElementById("stok-text");
+
+  db.ref("stok/" + produk).once("value").then(snap => {
+    const stok = snap.val();
+    if (!stok || stok <= 0) {
+      stokTeks.innerText = "0";
+      tombol.disabled = true;
+      tombol.innerText = "❌ Stok Habis";
+      tombol.style.backgroundColor = "#aaa";
+    } else {
+      stokTeks.innerText = stok;
+      tombol.disabled = false;
+      tombol.innerText = "📨 Kirim Pesanan";
+      tombol.style.backgroundColor = "";
+    }
+  });
+}
+
+// Kurangi stok saat submit dan kirim alert jika habis
 function kurangiStokJikaAda(data, callback) {
   const stokRef = db.ref("stok/" + data.produk);
-
   stokRef.once("value").then(snapshot => {
     let stok = snapshot.val();
     if (!stok || stok <= 0) {
@@ -83,20 +105,17 @@ function kurangiStokJikaAda(data, callback) {
     }
 
     stokRef.set(stok - 1).then(() => {
-      // Kirim alert ke Telegram jika stok habis
       if (stok - 1 === 0) {
         const msg = `⚠️ Stok produk ${data.produk} telah habis. Segera lakukan restock!`;
         const bot = '7834741276:AAE4aBvJWrAQt1iUNirsayeuyA3zCBWu0oA';
         const chat = '7133478033';
-
         fetch(`https://api.telegram.org/bot${bot}/sendMessage`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ chat_id: chat, text: msg })
         });
       }
-
-      callback(); // lanjut submit
+      callback();
     });
   });
 }
@@ -133,7 +152,8 @@ function kirimPesan() {
         });
       }
 
-      const msg = `🛒 Pesanan Masuk\nID Transaksi: ${idTransaksi}\n👤 ${nama}\n📱 ${wa}\n📦 ${produk === 'canva' ? 'Canva Pro' : produk === 'am1thn' ? 'AM Premium Sharing' : 'Alight Motion'}\n💳 ${metode}\n💰 Rp ${hargaFinal}${potonganInfo}\n🎟 ${kode}\n📧 ${email || '-'}\n🕒 ${waktu}`;
+      const produkLabel = produk === 'canva' ? 'Canva Pro' : produk === 'am1thn' ? 'AM Premium Sharing' : 'Alight Motion';
+      const msg = `🛒 Pesanan Masuk\nID Transaksi: ${idTransaksi}\n👤 ${nama}\n📱 ${wa}\n📦 ${produkLabel}\n💳 ${metode}\n💰 Rp ${hargaFinal}${potonganInfo}\n🎟 ${kode}\n📧 ${email || '-'}\n🕒 ${waktu}`;
       const bot = '7834741276:AAE4aBvJWrAQt1iUNirsayeuyA3zCBWu0oA';
       const chat = '7133478033';
 
@@ -152,6 +172,7 @@ function kirimPesan() {
           body: fd
         }).then(() => {
           alert('✅ Pesanan berhasil dikirim.');
+          cekStokAwal(); // refresh stok setelah kirim
         }).catch(() => alert('❌ Gagal kirim bukti transfer.'));
       }).catch(() => alert('❌ Gagal kirim ke Telegram.'));
     });
@@ -176,5 +197,6 @@ function kirimPesan() {
   }
 }
 
-// Jalankan saat halaman dibuka
+// Inisialisasi saat halaman dimuat
 getUserID();
+cekStokAwal();

@@ -5,27 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Pemesanan Akun Premium</title>
   <link rel="stylesheet" href="style.css" />
-  <script type="module" src="script.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
   <style>
-    .logo-area {
-      text-align: center;
-      margin-top: 1rem;
-    }
-    .logo-area img {
-      max-width: 150px;
-      border-radius: 12px;
-    }
-    .slogan {
-      text-align: center;
-      font-weight: bold;
-      font-size: 1.1rem;
-      margin-top: 0.5rem;
-      color: #444;
-    }
-    .channel-area {
-      text-align: center;
-      margin-top: 2rem;
-    }
+    .logo-area { text-align: center; margin-top: 1rem; }
+    .logo-area img { max-width: 150px; border-radius: 12px; }
+    .slogan { text-align: center; font-weight: bold; font-size: 1.1rem; margin-top: 0.5rem; color: #444; }
+    .channel-area { text-align: center; margin-top: 2rem; }
     .channel-area a {
       background: #25D366;
       color: white;
@@ -37,22 +23,15 @@
       font-weight: 600;
       font-size: 1rem;
     }
-    .channel-area a img {
-      width: 20px;
-      margin-right: 8px;
-    }
-    .channel-note {
-      text-align: center;
-      margin-top: 0.8rem;
-      font-size: 0.9rem;
-      color: #dc2626;
-      font-weight: bold;
-    }
+    .channel-area a img { width: 20px; margin-right: 8px; }
+    .channel-note { text-align: center; margin-top: 0.8rem; font-size: 0.9rem; color: #dc2626; font-weight: bold; }
+    .email-field { display: none; } /* default sembunyi */
+    .warning-email { font-size: 0.85rem; color: red; margin-top: 5px; display: none; }
+    #userInfo { margin-top: 10px; font-size: 0.85rem; color: #444; }
   </style>
 </head>
 <body>
 
-<!-- Logo + Slogan -->
 <div class="logo-area">
   <img src="https://files.catbox.moe/t2zrp8.png" alt="Logo Toko">
   <div class="slogan">Nikmati Produk Digital Premium, Harga Merakyat 💸🔥</div>
@@ -63,10 +42,10 @@
   <div class="stok">⚠ Stok tersedia: <span id="stok-text">Memuat...</span> akun</div>
 
   <label>👤 Nama Pembeli</label>
-  <input type="text" id="nama">
+  <input type="text" id="nama" />
 
   <label>📱 Nomor WhatsApp</label>
-  <input type="tel" id="wa">
+  <input type="tel" id="wa" />
 
   <label>📦 Pilih Produk</label>
   <select id="produk" onchange="pilihProduk()">
@@ -78,12 +57,12 @@
 
   <div class="email-field" id="email-wrap">
     <label>📧 Email Canva</label>
-    <input type="email" id="email">
+    <input type="email" id="email" />
     <div class="warning-email">⚠ Gunakan email yang belum pernah terdaftar Canva</div>
   </div>
 
   <label>📂 Kategori</label>
-  <input type="text" value="Aplikasi Premium" readonly>
+  <input type="text" value="Aplikasi Premium" readonly />
 
   <label>💳 Metode Pembayaran</label>
   <select id="metode" onchange="tampilkanPembayaran()">
@@ -93,43 +72,43 @@
     <option value="GoPay">GoPay</option>
   </select>
 
-  <div class="qr" id="qr-section">
+  <div class="qr" id="qr-section" style="display:none">
     <p>🧾 Scan QR untuk Pembayaran</p>
-    <img src="https://files.catbox.moe/vlrdhg.jpg" alt="QR Pembayaran">
+    <img src="https://files.catbox.moe/vlrdhg.jpg" alt="QR Pembayaran" />
   </div>
 
-  <div class="nomor-pembayaran" id="nomor-section">
+  <div class="nomor-pembayaran" id="nomor-section" style="display:none">
     <p>📲 Nomor Pembayaran: <b id="nomor-tujuan">089529592500</b></p>
     <button class="copy-btn" onclick="copyNomor()">Salin Nomor</button>
     <div class="note">⚠ SILAHKAN TRANSFER DAHULU SESUAI METODE PEMBAYARAN DAN KIRIMKAN NOMER DAN BUKTI DENGAN BENAR</div>
   </div>
 
   <label>💰 Harga</label>
-  <input type="text" id="harga" value="5000" readonly>
+  <input type="text" id="harga" value="5000" readonly />
 
   <label>🎟 Kode Diskon</label>
-  <input type="text" id="kode">
+  <input type="text" id="kode" />
 
   <label>📷 Upload Bukti Transfer (WAJIB)</label>
-  <input type="file" id="bukti" accept="image/*">
+  <input type="file" id="bukti" accept="image/*" />
 
   <button onclick="kirimPesan()" id="submitBtn">📨 Kirim Pesanan</button>
+
   <div id="userInfo">ID Perangkat: <span id="userIdDisplay"></span></div>
 </div>
 
 <div class="coming-soon">
-  🎬 CapCut Pro - 1 Bulan<br>📂 Kategori: Aplikasi Premium<br>🚧 Coming Soon...
+  🎬 CapCut Pro - 1 Bulan<br />📂 Kategori: Aplikasi Premium<br />🚧 Coming Soon...
 </div>
 
-<!-- WhatsApp Channel CTA -->
 <div class="channel-area">
   <a href="https://whatsapp.com/channel/0029VanxgEj7IUYVjWGrnd32" target="_blank">
-    <img src="https://cdn-icons-png.flaticon.com/512/733/733585.png" alt="WA Icon">
+    <img src="https://cdn-icons-png.flaticon.com/512/733/733585.png" alt="WA Icon" />
     Gabung Saluran WhatsApp
   </a>
   <div class="channel-note">MASUK SALURAN DI ATAS UNTUK DAPET INFO TOKEN VOCHER TERBARU</div>
 </div>
 
-<script type="module" src="script.js"></script>
+<script src="script.js"></script>
 </body>
 </html>

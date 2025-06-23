@@ -32,18 +32,17 @@ function pilihProduk() {
     harga.value = "4000";
     emailWrap.style.display = "block";
     warningEmail.style.display = "block";
+  } else if (produk === "am1thn") {
+    harga.value = "3000";
+    emailWrap.style.display = "none";
+    warningEmail.style.display = "none";
+    emailInput.value = "";
   } else {
-    if (produk === "am1thn") {
-      harga.value = "3000";
-    } else {
-      harga.value = "5000";
-    }
+    harga.value = "5000";
     emailWrap.style.display = "none";
     warningEmail.style.display = "none";
     emailInput.value = "";
   }
-
-  cekStokAwal(); // refresh stok sesuai produk
 }
 
 function copyNomor() {
@@ -62,61 +61,38 @@ function validasiVoucher(kode, userId) {
     if (!snap.exists()) return { valid: false, pesan: "Kode tidak ditemukan." };
     const data = snap.val();
     if (!data.aktif) return { valid: false, pesan: "Kode tidak aktif." };
-
     if (data.userId || data.digunakan !== undefined) {
       if (data.digunakan) return { valid: false, pesan: "Kode sudah digunakan." };
       if (data.userId && data.userId !== userId) return { valid: false, pesan: "Kode ini bukan untuk perangkat Anda." };
     }
-
     return { valid: true, potongan: data.potongan || 0 };
   });
 }
 
-// Tambahan: Cek stok dan matikan tombol jika kosong
-function cekStokAwal() {
-  const produk = document.getElementById("produk").value;
-  const tombol = document.querySelector("button[onclick='kirimPesan()']");
-  const stokTeks = document.getElementById("stok-text");
+function kurangiStokJikaAda(produk) {
+  const stokRef = db.ref("stok/" + produk);
+  const bot = '7834741276:AAE4aBvJWrAQt1iUNirsayeuyA3zCBWu0oA';
+  const chat = '7133478033';
 
-  db.ref("stok/" + produk).once("value").then(snap => {
-    const stok = snap.val();
-    if (!stok || stok <= 0) {
-      stokTeks.innerText = "0";
-      tombol.disabled = true;
-      tombol.innerText = "❌ Stok Habis";
-      tombol.style.backgroundColor = "#aaa";
-    } else {
-      stokTeks.innerText = stok;
-      tombol.disabled = false;
-      tombol.innerText = "📨 Kirim Pesanan";
-      tombol.style.backgroundColor = "";
-    }
-  });
-}
+  stokRef.once("value").then((snap) => {
+    if (snap.exists()) {
+      let stok = snap.val();
+      if (stok > 0) {
+        stokRef.set(stok - 1);
 
-// Kurangi stok saat submit dan kirim alert jika habis
-function kurangiStokJikaAda(data, callback) {
-  const stokRef = db.ref("stok/" + data.produk);
-  stokRef.once("value").then(snapshot => {
-    let stok = snapshot.val();
-    if (!stok || stok <= 0) {
-      alert("❌ Stok produk habis. Silakan pilih produk lain.");
-      return;
-    }
-
-    stokRef.set(stok - 1).then(() => {
-      if (stok - 1 === 0) {
-        const msg = `⚠️ Stok produk ${data.produk} telah habis. Segera lakukan restock!`;
-        const bot = '7834741276:AAE4aBvJWrAQt1iUNirsayeuyA3zCBWu0oA';
-        const chat = '7133478033';
-        fetch(`https://api.telegram.org/bot${bot}/sendMessage`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ chat_id: chat, text: msg })
-        });
+        if (stok === 1) {
+          fetch(`https://api.telegram.org/bot${bot}/sendMessage`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              chat_id: chat,
+              text: `⚠ Stok produk *${produk}* telah *habis*.\nSegera lakukan restock.`,
+              parse_mode: 'Markdown'
+            })
+          });
+        }
       }
-      callback();
-    });
+    }
   });
 }
 
@@ -152,8 +128,9 @@ function kirimPesan() {
         });
       }
 
-      const produkLabel = produk === 'canva' ? 'Canva Pro' : produk === 'am1thn' ? 'AM Premium Sharing' : 'Alight Motion';
-      const msg = `🛒 Pesanan Masuk\nID Transaksi: ${idTransaksi}\n👤 ${nama}\n📱 ${wa}\n📦 ${produkLabel}\n💳 ${metode}\n💰 Rp ${hargaFinal}${potonganInfo}\n🎟 ${kode}\n📧 ${email || '-'}\n🕒 ${waktu}`;
+      kurangiStokJikaAda(produk);
+
+      const msg = `🛒 Pesanan Masuk\nID Transaksi: ${idTransaksi}\n👤 ${nama}\n📱 ${wa}\n📦 ${produk}\n💳 ${metode}\n💰 Rp ${hargaFinal}${potonganInfo}\n🎟 ${kode}\n📧 ${email || '-'}\n🕒 ${waktu}`;
       const bot = '7834741276:AAE4aBvJWrAQt1iUNirsayeuyA3zCBWu0oA';
       const chat = '7133478033';
 
@@ -172,13 +149,10 @@ function kirimPesan() {
           body: fd
         }).then(() => {
           alert('✅ Pesanan berhasil dikirim.');
-          cekStokAwal(); // refresh stok setelah kirim
         }).catch(() => alert('❌ Gagal kirim bukti transfer.'));
       }).catch(() => alert('❌ Gagal kirim ke Telegram.'));
     });
   };
-
-  const dataStok = { produk };
 
   if (kode !== "") {
     validasiVoucher(kode, userId).then(result => {
@@ -186,17 +160,11 @@ function kirimPesan() {
       const potongan = result.potongan;
       const hargaFinal = parseInt(hargaAwal) - potongan;
       alert(`✅ Kode berhasil digunakan. Diskon Rp${potongan}`);
-      kurangiStokJikaAda(dataStok, () => {
-        prosesSubmit(hargaFinal, ` (Diskon: Rp${potongan})`);
-      });
+      prosesSubmit(hargaFinal, ` (Diskon: Rp${potongan})`);
     });
   } else {
-    kurangiStokJikaAda(dataStok, () => {
-      prosesSubmit(parseInt(hargaAwal), "");
-    });
+    prosesSubmit(parseInt(hargaAwal), "");
   }
 }
 
-// Inisialisasi saat halaman dimuat
 getUserID();
-cekStokAwal();

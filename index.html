@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pemesanan Akun Premium</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+</head>
+<body>
+
+<h2>🛍 Pemesanan Produk Digital</h2>
+<div class="form-section">
+  <div class="timer">🔥 Promo berakhir dalam: <span id="countdown"></span></div>
+  <div class="stok">⚠ Stok tersedia: <span id="stok-text">10</span> akun</div>
+
+  <label>👤 Nama Pembeli</label>
+  <input type="text" id="nama">
+
+  <label>📱 Nomor WhatsApp</label>
+  <input type="tel" id="wa">
+
+  <label>📦 Pilih Produk</label>
+  <select id="produk" onchange="pilihProduk()">
+    <option value="alight" selected>Alight Motion Premium - Rp5000</option>
+    <option value="canva">Canva Pro 1 Bulan - Rp4000</option>
+    <option disabled>CapCut Pro - Coming Soon</option>
+  </select>
+
+  <div class="email-field" id="email-wrap">
+    <label>📧 Email Canva</label>
+    <input type="email" id="email">
+    <div class="warning-email">⚠ Gunakan email yang belum pernah terdaftar Canva</div>
+  </div>
+
+  <label>📂 Kategori</label>
+  <input type="text" value="Aplikasi Premium" readonly>
+
+  <label>💳 Metode Pembayaran</label>
+  <select id="metode" onchange="tampilkanPembayaran()">
+    <option value="">-- Pilih Metode --</option>
+    <option value="QRIS">QRIS</option>
+    <option value="DANA">DANA</option>
+    <option value="GoPay">GoPay</option>
+  </select>
+
+  <div class="qr" id="qr-section">
+    <p>🧾 Scan QR untuk Pembayaran</p>
+    <img src="https://files.catbox.moe/vlrdhg.jpg" alt="QR Pembayaran">
+  </div>
+
+  <div class="nomor-pembayaran" id="nomor-section">
+    <p>📲 Nomor Pembayaran: <b id="nomor-tujuan">089529592500</b></p>
+    <button class="copy-btn" onclick="copyNomor()">Salin Nomor</button>
+    <div class="note">⚠ SILAHKAN TRANSFER DAHULU SESUAI METODE PEMBAYARAN DAN KIRIMKAN NOMER DAN BUKTI DENGAN BENAR</div>
+  </div>
+
+  <label>💰 Harga</label>
+  <input type="text" id="harga" value="5000" readonly>
+
+  <label>🎟 Kode Diskon</label>
+  <input type="text" id="kode">
+
+  <label>📷 Upload Bukti Transfer (WAJIB)</label>
+  <input type="file" id="bukti" accept="image/*">
+
+  <button onclick="kirimPesan()">📨 Kirim Pesanan</button>
+  <div id="userInfo">ID Perangkat: <span id="userIdDisplay"></span></div>
+</div>
+
+<div class="coming-soon">
+  🎬 CapCut Pro - 1 Bulan<br>📂 Kategori: Aplikasi Premium<br>🚧 Coming Soon...
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

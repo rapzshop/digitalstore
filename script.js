@@ -5,6 +5,7 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
+// ID Pengguna Lokal
 function getUserID() {
   let userId = localStorage.getItem("user_id");
   if (!userId) {
@@ -15,12 +16,14 @@ function getUserID() {
   return userId;
 }
 
+// Tampilkan QR atau Nomor sesuai metode
 function tampilkanPembayaran() {
   const metode = document.getElementById("metode").value;
   document.getElementById("qr-section").style.display = (metode === "QRIS") ? "block" : "none";
   document.getElementById("nomor-section").style.display = (metode === "DANA" || metode === "GoPay") ? "block" : "none";
 }
 
+// Ubah harga & email sesuai produk
 function pilihProduk() {
   const produk = document.getElementById("produk").value;
   const harga = document.getElementById("harga");
@@ -42,8 +45,27 @@ function pilihProduk() {
     warningEmail.style.display = "none";
     emailInput.value = "";
   }
+
+  // Ambil stok real-time
+  const stokEl = document.getElementById("stok-text");
+  const submitBtn = document.getElementById("submitBtn");
+  const stokRef = db.ref("stok/" + produk);
+  stokRef.once("value").then(snapshot => {
+    const stok = snapshot.val() || 0;
+    stokEl.textContent = stok;
+
+    if (stok <= 0) {
+      submitBtn.disabled = true;
+      submitBtn.textContent = "❌ Stok Habis";
+      kirimNotifStokHabis(produk);
+    } else {
+      submitBtn.disabled = false;
+      submitBtn.textContent = "📨 Kirim Pesanan";
+    }
+  });
 }
 
+// Salin nomor pembayaran
 function copyNomor() {
   const nomor = document.getElementById("nomor-tujuan").innerText;
   navigator.clipboard.writeText(nomor).then(() => {
@@ -51,27 +73,26 @@ function copyNomor() {
   });
 }
 
+// Generate ID pesanan
 function generateID() {
   return 'ORDER-' + Math.random().toString(36).substr(2, 9).toUpperCase();
 }
 
-// ✅ Update: Fungsi validasi voucher untuk umum & khusus
+// Validasi voucher umum & khusus
 function validasiVoucher(kode, userId) {
   return db.ref("voucher/" + kode).once("value").then((snap) => {
     if (!snap.exists()) return { valid: false, pesan: "Kode tidak ditemukan." };
     const data = snap.val();
     if (!data.aktif) return { valid: false, pesan: "Kode tidak aktif." };
-
-    // Cek jika voucher KHUSUS
     if (data.userId || data.digunakan !== undefined) {
       if (data.digunakan) return { valid: false, pesan: "Kode sudah digunakan." };
       if (data.userId && data.userId !== userId) return { valid: false, pesan: "Kode ini bukan untuk perangkat Anda." };
     }
-
     return { valid: true, potongan: data.potongan || 0 };
   });
 }
 
+// Kirim pesan pesanan
 function kirimPesan() {
   const nama = document.getElementById('nama').value.trim();
   const wa = document.getElementById('wa').value.trim();
@@ -95,7 +116,6 @@ function kirimPesan() {
   const prosesSubmit = (hargaFinal, potonganInfo) => {
     const data = { id: idTransaksi, userId, nama, wa, produk, metode, kode, harga: hargaFinal, email, waktu, status: "menunggu" };
     db.ref("pesanan/" + idTransaksi).set(data).then(() => {
-      // Tandai digunakan hanya jika voucher khusus
       if (kode !== "" && kode !== "Tidak digunakan") {
         db.ref("voucher/" + kode).once("value").then((snap) => {
           const data = snap.val();
@@ -105,7 +125,7 @@ function kirimPesan() {
         });
       }
 
-      const msg = `🛒 Pesanan Masuk\nID Transaksi: ${idTransaksi}\n👤 ${nama}\n📱 ${wa}\n📦 ${produk === 'canva' ? 'Canva Pro' : 'Alight Motion'}\n💳 ${metode}\n💰 Rp ${hargaFinal}${potonganInfo}\n🎟 ${kode}\n📧 ${email || '-'}\n🕒 ${waktu}`;
+      const msg = `🛒 Pesanan Masuk\nID Transaksi: ${idTransaksi}\n👤 ${nama}\n📱 ${wa}\n📦 ${produk === 'canva' ? 'Canva Pro' : produk === 'am1thn' ? 'AM Premium 1 Tahun Sharing' : 'Alight Motion'}\n💳 ${metode}\n💰 Rp ${hargaFinal}${potonganInfo}\n🎟 ${kode}\n📧 ${email || '-'}\n🕒 ${waktu}`;
       const bot = '7834741276:AAE4aBvJWrAQt1iUNirsayeuyA3zCBWu0oA';
       const chat = '7133478033';
 
@@ -142,5 +162,18 @@ function kirimPesan() {
   }
 }
 
-// Jalankan user ID saat halaman dibuka
+// Kirim notifikasi ke Telegram saat stok habis
+function kirimNotifStokHabis(produk) {
+  const bot = '7834741276:AAE4aBvJWrAQt1iUNirsayeuyA3zCBWu0oA';
+  const chat = '7133478033';
+  const pesan = `🚨 Stok produk *${produk}* habis. Mohon segera restock.`;
+  fetch(`https://api.telegram.org/bot${bot}/sendMessage`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ chat_id: chat, text: pesan, parse_mode: 'Markdown' })
+  });
+}
+
+// Jalankan saat halaman dibuka
 getUserID();
+pilihProduk();

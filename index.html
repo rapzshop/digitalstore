@@ -7,12 +7,62 @@
   <link rel="stylesheet" href="style.css">
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+  <style>
+    .logo-area {
+      text-align: center;
+      margin-top: 1rem;
+    }
+    .logo-area img {
+      max-width: 150px;
+      border-radius: 12px;
+    }
+    .slogan {
+      text-align: center;
+      font-weight: bold;
+      font-size: 1.1rem;
+      margin-top: 0.5rem;
+      color: #444;
+    }
+    .channel-area {
+      text-align: center;
+      margin-top: 2rem;
+    }
+    .channel-area a {
+      background: #25D366;
+      color: white;
+      padding: 0.7rem 1.4rem;
+      text-decoration: none;
+      border-radius: 10px;
+      display: inline-flex;
+      align-items: center;
+      font-weight: 600;
+      font-size: 1rem;
+    }
+    .channel-area a img {
+      width: 20px;
+      margin-right: 8px;
+    }
+    .channel-note {
+      text-align: center;
+      margin-top: 0.8rem;
+      font-size: 0.9rem;
+      color: #dc2626;
+      font-weight: bold;
+    }
+  </style>
 </head>
 <body>
 
+<!-- Logo + Slogan -->
+<div class="logo-area">
+  <img src="https://deposit.pictures/p/1240485b0b4b4cd5853447985c4740db" alt="Logo Toko">
+  <div class="slogan">Nikmati Produk Digital Premium, Harga Merakyat 💸🔥</div>
+</div>
+
 <h2>🛍 Pemesanan Produk Digital</h2>
 <div class="form-section">
-  <div class="timer">🔥 Promo berakhir dalam: <span id="countdown"></span></div>
+  <!-- Bagian promo countdown Dihapus -->
+
   <div class="stok">⚠ Stok tersedia: <span id="stok-text">10</span> akun</div>
 
   <label>👤 Nama Pembeli</label>
@@ -71,6 +121,15 @@
 
 <div class="coming-soon">
   🎬 CapCut Pro - 1 Bulan<br>📂 Kategori: Aplikasi Premium<br>🚧 Coming Soon...
+</div>
+
+<!-- WhatsApp Channel CTA -->
+<div class="channel-area">
+  <a href="https://whatsapp.com/channel/0029VanxgEj7IUYVjWGrnd32" target="_blank">
+    <img src="https://cdn-icons-png.flaticon.com/512/733/733585.png" alt="WA Icon">
+    Gabung Saluran WhatsApp
+  </a>
+  <div class="channel-note">MASUK SALURAN DI BAWAH UNTUK DAPET INFO TOKEN VOCHER TERBARU</div>
 </div>
 
 <script src="script.js"></script>

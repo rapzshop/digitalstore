@@ -43,6 +43,8 @@ function pilihProduk() {
     warningEmail.style.display = "none";
     emailInput.value = "";
   }
+
+  cekStok(produk);
 }
 
 function copyNomor() {
@@ -79,7 +81,6 @@ function kurangiStokJikaAda(produk) {
       let stok = snap.val();
       if (stok > 0) {
         stokRef.set(stok - 1);
-
         if (stok === 1) {
           fetch(`https://api.telegram.org/bot${bot}/sendMessage`, {
             method: 'POST',
@@ -92,6 +93,24 @@ function kurangiStokJikaAda(produk) {
           });
         }
       }
+    }
+  });
+}
+
+function cekStok(produk) {
+  const btn = document.querySelector("button[onclick='kirimPesan()']");
+  const stokText = document.getElementById("stok-text");
+
+  db.ref("stok/" + produk).once("value").then((snap) => {
+    if (snap.exists()) {
+      const stok = snap.val();
+      stokText.innerText = stok;
+      btn.disabled = stok <= 0;
+      btn.innerText = stok <= 0 ? "🚫 Stok Habis" : "📨 Kirim Pesanan";
+    } else {
+      stokText.innerText = "0";
+      btn.disabled = true;
+      btn.innerText = "🚫 Stok Habis";
     }
   });
 }
@@ -149,6 +168,7 @@ function kirimPesan() {
           body: fd
         }).then(() => {
           alert('✅ Pesanan berhasil dikirim.');
+          cekStok(produk);
         }).catch(() => alert('❌ Gagal kirim bukti transfer.'));
       }).catch(() => alert('❌ Gagal kirim ke Telegram.'));
     });
@@ -168,3 +188,4 @@ function kirimPesan() {
 }
 
 getUserID();
+pilihProduk();

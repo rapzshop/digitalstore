@@ -4,9 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Pemesanan Akun Premium</title>
-  <link rel="stylesheet" href="style.css">
-  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+  <link rel="stylesheet" href="style.css" />
+  <script type="module" src="script.js"></script>
   <style>
     .logo-area {
       text-align: center;
@@ -61,9 +60,7 @@
 
 <h2>🛍 Pemesanan Produk Digital</h2>
 <div class="form-section">
-  <!-- Bagian promo countdown Dihapus -->
-
-  <div class="stok">⚠ Stok tersedia: <span id="stok-text">50</span> akun</div>
+  <div class="stok">⚠ Stok tersedia: <span id="stok-text">Memuat...</span> akun</div>
 
   <label>👤 Nama Pembeli</label>
   <input type="text" id="nama">
@@ -73,11 +70,11 @@
 
   <label>📦 Pilih Produk</label>
   <select id="produk" onchange="pilihProduk()">
-  <option value="alight" selected>Alight Motion Premium - Rp5000</option>
-  <option value="canva">Canva Pro 1 Bulan - Rp4000</option>
-  <option value="am1thn">AM PREMIUM 1 TAHUN SHARING - Rp3000</option>
-  <option disabled>CapCut Pro - Coming Soon</option>
-</select>
+    <option value="alight" selected>Alight Motion Premium - Rp5000</option>
+    <option value="canva">Canva Pro 1 Bulan - Rp4000</option>
+    <option value="am1thn">AM PREMIUM 1 TAHUN SHARING - Rp3000</option>
+    <option disabled>CapCut Pro - Coming Soon</option>
+  </select>
 
   <div class="email-field" id="email-wrap">
     <label>📧 Email Canva</label>
@@ -116,7 +113,7 @@
   <label>📷 Upload Bukti Transfer (WAJIB)</label>
   <input type="file" id="bukti" accept="image/*">
 
-  <button onclick="kirimPesan()">📨 Kirim Pesanan</button>
+  <button onclick="kirimPesan()" id="submitBtn">📨 Kirim Pesanan</button>
   <div id="userInfo">ID Perangkat: <span id="userIdDisplay"></span></div>
 </div>
 
@@ -133,6 +130,6 @@
   <div class="channel-note">MASUK SALURAN DI ATAS UNTUK DAPET INFO TOKEN VOCHER TERBARU</div>
 </div>
 
-<script src="script.js"></script>
+<script type="module" src="script.js"></script>
 </body>
 </html>

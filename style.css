@@ -141,3 +141,9 @@ button:hover {
   color: #dc2626;
   font-weight: bold;
 }
+
+.qr img {
+  max-width: 250px;
+  width: 100%;
+  border-radius: 10px;
+}

@@ -153,7 +153,7 @@ button:hover {
   border-radius: 10px;
 }
 
-/* SLIDER INFO SEPERTI VIPAYMENT - UKURAN KECIL */
+/* SLIDER INFO SEPERTI VIPAYMENT - UKURAN KECIL (untuk 2 gambar) */
 .slider-info-container {
   max-width: 600px;
   height: 90px;
@@ -165,8 +165,8 @@ button:hover {
 
 .slider-info {
   display: flex;
-  width: 300%;
-  animation: slideInfo 10s infinite ease-in-out;
+  width: 200%;
+  animation: slideInfo 8s infinite ease-in-out;
 }
 
 .slider-info img {
@@ -175,11 +175,11 @@ button:hover {
   object-fit: cover;
   flex-shrink: 0;
   border-radius: 8px;
+  min-width: 100%;
 }
 
 @keyframes slideInfo {
   0% { transform: translateX(0); }
-  33% { transform: translateX(-100%); }
-  66% { transform: translateX(-200%); }
+  50% { transform: translateX(-100%); }
   100% { transform: translateX(0); }
 }

@@ -153,13 +153,14 @@ button:hover {
   border-radius: 10px;
 }
 
-/* SLIDER INFO SESUAI UKURAN GAMBAR WHATSAPP ADMIN */
+ /* SLIDER INFO SESUAI UKURAN GAMBAR WHATSAPP ADMIN */
 .slider-info-container {
-  max-width: 100%;
-  width: 100%;
+  max-width: 600px;
+  height: 200px; /* cocok untuk 1152x768 px */
+  overflow: hidden;
+  border-radius: 8px;
   margin: 1rem auto;
-  display: flex;
-  justify-content: center;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.1);
 }
 
 .slider-info {
@@ -170,9 +171,8 @@ button:hover {
 
 .slider-info img {
   width: 100%;
-  max-width: 600px;  /* atau kamu bisa sesuaikan */
-  height: auto;
-  object-fit: contain;
+  height: 200px;
+  object-fit: cover;
   flex-shrink: 0;
   border-radius: 8px;
 }

@@ -153,7 +153,7 @@ button:hover {
   border-radius: 10px;
 }
 
- /* SLIDER INFO SESUAI UKURAN GAMBAR WHATSAPP ADMIN */
+*/
 .slider-info-container {
   max-width: 600px;
   height: 200px; /* cocok untuk 1152x768 px */
@@ -182,4 +182,3 @@ button:hover {
   50% { transform: translateX(-100%); }
   100% { transform: translateX(0); }
 }
-

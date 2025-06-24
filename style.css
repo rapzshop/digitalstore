@@ -1,16 +1,9 @@
 body {
   font-family: 'Segoe UI', sans-serif;
-  background: url('https://iili.io/FTN5aKF.jpg') no-repeat center center fixed;
+  background: url('https://images.unsplash.com/photo-1504198458649-3128b932f49b?auto=format&fit=crop&w=1470&q=80') no-repeat center center fixed;
   background-size: cover;
   margin: 0;
   padding: 0;
-  animation: moveBackground 60s linear infinite;
-}
-
-/* Animasi latar belakang */
-@keyframes moveBackground {
-  0% { background-position: 0 0; }
-  100% { background-position: 1000px 0; }
 }
 
 h2 {
@@ -182,11 +175,9 @@ button:hover {
   object-fit: cover;
 }
 
-/* Animation Keyframes */
 @keyframes slide {
   0% { transform: translateX(0); }
   33% { transform: translateX(-100%); }
   66% { transform: translateX(-200%); }
   100% { transform: translateX(0); }
 }
-

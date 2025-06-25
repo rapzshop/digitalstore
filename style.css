@@ -176,10 +176,11 @@ button:hover {
 
 /* --- SETIAP GAMBAR --- */
 .slider-info img {
-  flex: 0 0 100%;         /* setiap slide persis selebar frame */
-  height: 100%;           /* selalu 200 px */
-  object-fit: cover;      /* zoom-crop, tidak melar/gepeng */
+  flex: 0 0 100%;
+  height: 100%;
+  object-fit: contain; /* ⬅️ tampilkan seluruh gambar utuh tanpa crop */
   display: block;
+  background-color: #f2f2f2; /* ⬅️ (opsional) beri warna latar belakang jika ada ruang kosong */
 }
 
 /* --- ANIMASI --- */

@@ -153,45 +153,48 @@ button:hover {
   border-radius: 10px;
 }
 
-/* =====➡  CSS  */
-/* FRAME / bingkai */
+/* BINGKAI */
 .slider-frame{
   width:100%;
-  max-width:600px;      /* 600 px saja */
-  height:200px;         /* tinggi 200 px */
+  max-width:600px;
+  height:200px;
   overflow:hidden;
-  margin:24px auto;     /* tengah */
+  margin:24px auto;
   border-radius:12px;
-  background:#003366;   /* ubah warna frame di sini */
-  box-shadow:0 4px 12px rgba(0,0,0,.15);
+  background:#003366;        /* ubah bebas */
+  box-shadow:0 4px 12px rgba(0,0,0,.12);
   position:relative;
 }
 
-/* REL kereta slide */
+/* REL SLIDE */
 .slider-track{
   display:flex;
+  width:calc(100% * 2);      /* 2 = jumlah slide */
   height:100%;
-  width:calc(100% * 2); /* <-- 2 = jumlah slide; ubah kalau slide > 2  */
-  animation:slideBanner 8s infinite ease-in-out;
+  animation:slide 8s infinite ease-in-out;
 }
 
 /* SETIAP SLIDE */
 .slide{
-  flex:0 0 100%;        /* lebar = persis bingkai */
+  flex:0 0 100%;             /* persis selebar bingkai */
   height:100%;
+  display:flex;              /* supaya img bisa ditengah */
+  justify-content:center;
+  align-items:center;
 }
 
-/* GAMBAR di dalam slide */
+/* GAMBAR */
 .slide img{
-  width:100%;
-  height:100%;
-  object-fit:contain;   /* tampil utuh; pakai cover kalau mau full-crop */
-  background:#003366;   /* agar samping gambar warnanya sama dg frame */
+  max-width:100%;
+  max-height:100%;
+  object-fit:contain;        /* tidak ter‐crop */
+  object-position:center;    /* pasti di tengah */
+  background:#003366;        /* warna samping saat letterbox */
 }
 
-/* KEYFRAME animasi */
-@keyframes slideBanner{
-  0%,28%  {transform:translateX(0%);}     /* tampil slide-1 sebentar */
-  32%,60% {transform:translateX(-100%);}  /* geser ke slide-2 */
-  64%,100%{transform:translateX(0%);}     /* balik ulang */
+/* ANIMASI – berhenti 40 % & 90 % untuk "time to read" */
+@keyframes slide{
+  0%,40%   {transform:translateX(0%);}      /* slide-1 on screen */
+  50%,90%  {transform:translateX(-100%);}   /* slide-2 on screen */
+  100%     {transform:translateX(0%);}      /* balik ulang */
 }

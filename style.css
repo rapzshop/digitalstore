@@ -108,12 +108,17 @@ button:hover {
 }
 
 .slogan {
-  text-align: center;
+  color: #ffffff;
+  text-shadow: 0 2px 5px rgba(0, 0, 0, 0.7);
   font-weight: bold;
-  font-size: 1.3rem;
+  text-align: center;
+  font-size: 1.2rem;
   margin-top: 1rem;
-  color: #ffffff; /* tetap putih */
-  text-shadow: 0 0 4px rgba(255, 255, 255, 0.7); /* efek glow putih */
+  z-index: 2;
+  position: relative;
+  background-color: rgba(0,0,0,0.4); /* opsional */
+  padding: 6px 12px;
+  border-radius: 8px;
 }
 
 .channel-area {

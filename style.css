@@ -153,32 +153,40 @@ button:hover {
   border-radius: 10px;
 }
 
-*/
+/* --- FRAME / WRAPPER --- */
 .slider-info-container {
-  max-width: 600px;
-  height: 200px; /* cocok untuk 1152x768 px */
-  overflow: hidden;
-  border-radius: 8px;
+  width: 100%;            /* lebar fleksibel – penuh kolom */
+  max-width: 600px;       /* tapi tidak lebih dari 600 px */
+  height: 200px;          /* tinggi fix 200 px */
   margin: 1rem auto;
-  box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+  overflow: hidden;       /* potong sisa gambar agar tidak keluar */
+  border-radius: 8px;
+  box-shadow: 0 3px 6px rgba(0,0,0,.1);
+  position: relative;     /* basis posisi anak di dalam */
 }
 
+/* --- STRIP SLIDE --- */
 .slider-info {
   display: flex;
-  width: 200%;
+  /* ganti 2 dengan jumlah gambarmu */
+  width: calc(100% * 2);  /* =200 % jika 2 gambar; 300 % jika 3 dst. */
+  height: 100%;
   animation: slideInfo 10s infinite ease-in-out;
 }
 
+/* --- SETIAP GAMBAR --- */
 .slider-info img {
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
-  flex-shrink: 0;
-  border-radius: 8px;
+  flex: 0 0 100%;         /* setiap slide persis selebar frame */
+  height: 100%;           /* selalu 200 px */
+  object-fit: cover;      /* zoom-crop, tidak melar/gepeng */
+  display: block;
 }
 
+/* --- ANIMASI --- */
 @keyframes slideInfo {
-  0% { transform: translateX(0); }
-  50% { transform: translateX(-100%); }
-  100% { transform: translateX(0); }
+  0%   { transform: translateX(0); }
+  45%  { transform: translateX(0); }      /* stay a bit */
+  50%  { transform: translateX(-100%); }  /* geser ke slide ke-2 */
+  95%  { transform: translateX(-100%); }  /* stay a bit */
+  100% { transform: translateX(0); }      /* balik ke awal */
 }

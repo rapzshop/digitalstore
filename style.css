@@ -153,39 +153,54 @@ button:hover {
   border-radius: 10px;
 }
 
+/* =======  SETEL JUMLAH SLIDE DI SINI  ======= */
+:root {
+  --slide-count: 2;          /* ← ganti jadi 3, 4, dst. */
+}
+
+/* =======  BINGKAI / FRAME  ======= */
 .slider-frame {
   width: 100%;
-  max-width: 600px;
-  height: 200px;
-  overflow: hidden;
+  max-width: 600px;          /* lebar tetap 600 px */
+  height: 200px;             /* tinggi tetap 200 px */
   margin: 24px auto;
+  overflow: hidden;
   border-radius: 12px;
-  background: #003366;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+  background: #003366;       /* warna dasar (muncul jika object-fit:contain) */
+  box-shadow: 0 4px 12px rgba(0,0,0,.15);
   position: relative;
 }
-/* …… CSS .slider-frame & .slider-track sama seperti sebelumnya …… */
 
-/* karena 2 gambar, lebar rel = 200 %, maka tiap img = 50 % */
-.slider-track img{
-  flex:0 0 50%;       /* ⬅️ kunci: 100 % / jumlah slide */
-  width:50%;
-  height:100%;
-  object-fit:cover;   /* atau contain kalau mau utuh */
-  object-position:center;
-  background:#003366; /* tidak akan terlihat jika cover */
+/* =======  REL / TRACK  ======= */
+.slider-track {
+  display: flex;
+  width: calc(100% * var(--slide-count));   /* 100 % × jumlah slide */
+  height: 100%;
+  animation: slide 8s infinite ease-in-out;
 }
 
+/* =======  GAMBAR  ======= */
 .slider-track img {
+  flex: 0 0 calc(100% / var(--slide-count));  /* lebar per gambar */
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: cover;          /* pakai 'contain' kalau mau utuh */
   object-position: center;
-  background: #003366;
-  flex-shrink: 0;
+  display: block;
 }
+
+/* =======  KEYFRAME 2 SLIDE (default) ======= */
 @keyframes slide {
-  0%, 40%   { transform: translateX(0); }
-  50%, 90%  { transform: translateX(-100%); }
-  100%      { transform: translateX(0); }
+  0%, 40%  { transform: translateX(0); }          /* slide-1 di tengah */
+  50%, 90% { transform: translateX(-100%); }      /* slide-2 di tengah */
+  100%     { transform: translateX(0); }
 }
+
+/* =======  KEYFRAME OTOMATIS JIKA >2 SLIDE =======
+   (hapus blok di atas & aktifkan ini kalau slide > 2) */
+/*
+@keyframes slide {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(calc(-100% * (var(--slide-count) - 1))); }
+}
+*/

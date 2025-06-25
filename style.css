@@ -158,38 +158,38 @@ button:hover {
   border-radius: 10px;
 }
 
-/* =======  SETEL JUMLAH SLIDE DI SINI  ======= */
 :root {
-  --slide-count: 2;          /* ← ganti jadi 3, 4, dst. */
+  --slide-count: 2; /* jumlah slide */
 }
 
-/* =======  BINGKAI / FRAME  ======= */
 .slider-frame {
   width: 100%;
-  max-width: 600px;          /* lebar tetap 600 px */
-  height: 200px;             /* tinggi tetap 200 px */
+  max-width: 600px;
+  aspect-ratio: 3 / 1; /* otomatis jaga proporsi 600:200 */
   margin: 24px auto;
   overflow: hidden;
   border-radius: 12px;
-  background: #003366;       /* warna dasar (muncul jika object-fit:contain) */
-  box-shadow: 0 4px 12px rgba(0,0,0,.15);
+  background: #003366;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   position: relative;
 }
 
-/* =======  REL / TRACK  ======= */
 .slider-track {
   display: flex;
-  width: calc(100% * var(--slide-count));   /* 100 % × jumlah slide */
+  width: calc(100% * var(--slide-count));
   height: 100%;
   animation: slide 8s infinite ease-in-out;
 }
 
-/* =======  GAMBAR  ======= */
-.slider-track img {
-  flex: 0 0 calc(100% / var(--slide-count));  /* lebar per gambar */
+.slide {
+  flex: 0 0 100%;
+  height: 100%;
+}
+
+.slide img {
   width: 100%;
   height: 100%;
-  object-fit: cover;          /* pakai 'contain' kalau mau utuh */
+  object-fit: cover;
   object-position: center;
   display: block;
 }

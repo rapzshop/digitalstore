@@ -153,7 +153,7 @@ button:hover {
   border-radius: 10px;
 }
 
-/* BINGKAI */
+/* FRAME */
 .slider-frame{
   width:100%;
   max-width:600px;
@@ -161,24 +161,24 @@ button:hover {
   overflow:hidden;
   margin:24px auto;
   border-radius:12px;
-  background:#003366;        /* ubah bebas */
+  background:#f43f5e !important;     /* ganti warna di sini */
   box-shadow:0 4px 12px rgba(0,0,0,.12);
   position:relative;
 }
 
-/* REL SLIDE */
+/* REL SLIDE – ubah 2 jika slide > 2 */
 .slider-track{
   display:flex;
-  width:calc(100% * 2);      /* 2 = jumlah slide */
+  width:calc(100% * 2);
   height:100%;
   animation:slide 8s infinite ease-in-out;
 }
 
-/* SETIAP SLIDE */
+/* TIAP SLIDE */
 .slide{
-  flex:0 0 100%;             /* persis selebar bingkai */
+  flex:0 0 100%;
   height:100%;
-  display:flex;              /* supaya img bisa ditengah */
+  display:flex;
   justify-content:center;
   align-items:center;
 }
@@ -187,14 +187,15 @@ button:hover {
 .slide img{
   max-width:100%;
   max-height:100%;
-  object-fit:contain;        /* tidak ter‐crop */
-  object-position:center;    /* pasti di tengah */
-  background:#003366;        /* warna samping saat letterbox */
+  object-fit:contain;          /* terlihat utuh, tak ter-crop */
+  object-position:center;
+  background:#f43f5e;          /* warna samping bila letter-box */
 }
 
-/* ANIMASI – berhenti 40 % & 90 % untuk "time to read" */
+/* ANIMASI: berhenti 0-40 % di slide-1, 50-90 % di slide-2 */
 @keyframes slide{
-  0%,40%   {transform:translateX(0%);}      /* slide-1 on screen */
-  50%,90%  {transform:translateX(-100%);}   /* slide-2 on screen */
-  100%     {transform:translateX(0%);}      /* balik ulang */
+  0%,40%   {transform:translateX(0);}
+  50%,90%  {transform:translateX(-100%);}
+  100%     {transform:translateX(0);}
 }
+

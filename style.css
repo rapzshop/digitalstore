@@ -164,12 +164,18 @@ button:hover {
   box-shadow: 0 4px 12px rgba(0,0,0,0.12);
   position: relative;
 }
-.slider-track {
-  display: flex;
-  width: 200%; /* karena 2 gambar */
-  height: 100%;
-  animation: slide 8s infinite ease-in-out;
+/* …… CSS .slider-frame & .slider-track sama seperti sebelumnya …… */
+
+/* karena 2 gambar, lebar rel = 200 %, maka tiap img = 50 % */
+.slider-track img{
+  flex:0 0 50%;       /* ⬅️ kunci: 100 % / jumlah slide */
+  width:50%;
+  height:100%;
+  object-fit:cover;   /* atau contain kalau mau utuh */
+  object-position:center;
+  background:#003366; /* tidak akan terlihat jika cover */
 }
+
 .slider-track img {
   width: 100%;
   height: 100%;

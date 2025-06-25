@@ -153,40 +153,45 @@ button:hover {
   border-radius: 10px;
 }
 
-.slider-frame {
-  width: 100%;
-  max-width: 600px;
-  height: 200px;
-  overflow: hidden;
-  margin: auto;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-  position: relative;
+/* =====➡  CSS  */
+/* FRAME / bingkai */
+.slider-frame{
+  width:100%;
+  max-width:600px;      /* 600 px saja */
+  height:200px;         /* tinggi 200 px */
+  overflow:hidden;
+  margin:24px auto;     /* tengah */
+  border-radius:12px;
+  background:#003366;   /* ubah warna frame di sini */
+  box-shadow:0 4px 12px rgba(0,0,0,.15);
+  position:relative;
 }
 
-.slider-track {
-  display: flex;
-  width: calc(100% * 2); /* ganti 2 sesuai jumlah gambar */
-  height: 100%;
-  animation: slideInfo 10s infinite ease-in-out;
+/* REL kereta slide */
+.slider-track{
+  display:flex;
+  height:100%;
+  width:calc(100% * 2); /* <-- 2 = jumlah slide; ubah kalau slide > 2  */
+  animation:slideBanner 8s infinite ease-in-out;
 }
 
-.slider-track img {
-  width: 100%;      /* tiap gambar 100% dari .slider-frame */
-  height: 100%;
-  object-fit: contain; /* tampilkan gambar utuh, tanpa zoom */
-  flex-shrink: 0;
-  background: #fff;
+/* SETIAP SLIDE */
+.slide{
+  flex:0 0 100%;        /* lebar = persis bingkai */
+  height:100%;
 }
 
-@keyframes slideInfo {
-  0%, 45% {
-    transform: translateX(0%);
-  }
-  50%, 95% {
-    transform: translateX(-100%);
-  }
-  100% {
-    transform: translateX(0%);
-  }
+/* GAMBAR di dalam slide */
+.slide img{
+  width:100%;
+  height:100%;
+  object-fit:contain;   /* tampil utuh; pakai cover kalau mau full-crop */
+  background:#003366;   /* agar samping gambar warnanya sama dg frame */
+}
+
+/* KEYFRAME animasi */
+@keyframes slideBanner{
+  0%,28%  {transform:translateX(0%);}     /* tampil slide-1 sebentar */
+  32%,60% {transform:translateX(-100%);}  /* geser ke slide-2 */
+  64%,100%{transform:translateX(0%);}     /* balik ulang */
 }

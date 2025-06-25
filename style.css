@@ -153,41 +153,40 @@ button:hover {
   border-radius: 10px;
 }
 
-/* --- FRAME / WRAPPER --- */
-.slider-info-container {
-  width: 100%;            /* lebar fleksibel – penuh kolom */
-  max-width: 600px;       /* tapi tidak lebih dari 600 px */
-  height: 200px;          /* tinggi fix 200 px */
-  margin: 1rem auto;
-  overflow: hidden;       /* potong sisa gambar agar tidak keluar */
-  border-radius: 8px;
-  box-shadow: 0 3px 6px rgba(0,0,0,.1);
-  position: relative;     /* basis posisi anak di dalam */
+.slider-frame {
+  width: 100%;
+  max-width: 600px;
+  height: 200px;
+  overflow: hidden;
+  margin: auto;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  position: relative;
 }
 
-/* --- STRIP SLIDE --- */
-.slider-info {
+.slider-track {
   display: flex;
-  /* ganti 2 dengan jumlah gambarmu */
-  width: calc(100% * 2);  /* =200 % jika 2 gambar; 300 % jika 3 dst. */
+  width: calc(100% * 2); /* ganti 2 sesuai jumlah gambar */
   height: 100%;
   animation: slideInfo 10s infinite ease-in-out;
 }
 
-/* --- SETIAP GAMBAR --- */
-.slider-info img {
-  flex: 0 0 100%;
+.slider-track img {
+  width: 100%;      /* tiap gambar 100% dari .slider-frame */
   height: 100%;
-  object-fit: contain; /* ⬅️ tampilkan seluruh gambar utuh tanpa crop */
-  display: block;
-  background-color: #f2f2f2; /* ⬅️ (opsional) beri warna latar belakang jika ada ruang kosong */
+  object-fit: contain; /* tampilkan gambar utuh, tanpa zoom */
+  flex-shrink: 0;
+  background: #fff;
 }
 
-/* --- ANIMASI --- */
 @keyframes slideInfo {
-  0%   { transform: translateX(0); }
-  45%  { transform: translateX(0); }      /* stay a bit */
-  50%  { transform: translateX(-100%); }  /* geser ke slide ke-2 */
-  95%  { transform: translateX(-100%); }  /* stay a bit */
-  100% { transform: translateX(0); }      /* balik ke awal */
+  0%, 45% {
+    transform: translateX(0%);
+  }
+  50%, 95% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(0%);
+  }
 }
